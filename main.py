@@ -1,5 +1,7 @@
+from contextlib import nullcontext
 import cv2
 import numpy as np
+import glob
 
 # カメラCh.(ここでは0)を指定
 camera = cv2.VideoCapture(0)
@@ -12,8 +14,28 @@ dictionary = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
 
 parameters = aruco.DetectorParameters_create()
 
-# カード画像（テスト用）
-im_src = cv2.imread('img0.jpg')
+#カード対応表の初期化
+f = open("Cards/Table.txt", "w")
+f.write("[カード対応表]\n")
+
+# ノーイメージ
+noimg = cv2.imread('noimg.jpg')
+
+#カード画像を読み込み
+dir=glob.glob("Cards/*.jpg", recursive=True)
+card=[]
+
+for i, d in enumerate(dir):
+    card.append(cv2.imread(d))
+    idx = d.find('\\')
+    r = d[idx+len('\\'):]
+    f.write(str(i)+': '+r+'\n')
+
+while(len(card)<50):
+    card.append(noimg)
+
+#対応表を閉じる
+f.close()
 
 # 撮影＝ループ中にフレームを1枚ずつ取得（qキーで撮影終了）
 while True:
@@ -35,7 +57,7 @@ while True:
 
     if np.all(ids != None):
         # 検出したARマーカーの数ループする
-        for c in corners:
+        for i, c in enumerate(corners):
             # cornersをカード型に変形
             x1 = (c[0][0][0], c[0][0][1])
             x2 = (c[0][1][0], c[0][1][1])
@@ -48,7 +70,7 @@ while True:
                 round((c[0][3][1]-c[0][0][1])*0.4)+c[0][3][1]
             )
 
-            size = im_src.shape
+            size = noimg.shape
             pts_dst = np.array([x1, x2, x3, x4])
             pts_src = np.array(
                 [
@@ -58,6 +80,9 @@ while True:
                     [0, size[0] - 1]
                 ], dtype=float
             )
+
+            im_src=card[int(ids[i])]
+
             h, status = cv2.findHomography(pts_src, pts_dst)
             temp = cv2.warpPerspective(
                 im_src.copy(), h, (frame.shape[1], frame.shape[0]))
