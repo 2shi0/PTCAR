@@ -14,16 +14,16 @@ dictionary = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
 
 parameters = aruco.DetectorParameters_create()
 
-#カード対応表の初期化
+# カード対応表の初期化
 f = open("Cards/Table.txt", "w")
 f.write("[カード対応表]\n")
 
 # ノーイメージ
 noimg = cv2.imread('noimg.jpg')
 
-#カード画像を読み込み
-dir=glob.glob("Cards/*.jpg", recursive=True)
-card=[]
+# カード画像を読み込み
+dir = glob.glob("Cards/*.jpg", recursive=True)
+card = []
 
 for i, d in enumerate(dir):
     card.append(cv2.imread(d))
@@ -31,10 +31,10 @@ for i, d in enumerate(dir):
     r = d[idx+len('\\'):]
     f.write(str(i)+': '+r+'\n')
 
-while(len(card)<50):
+while(len(card) < 50):
     card.append(noimg)
 
-#対応表を閉じる
+# 対応表を閉じる
 f.close()
 
 # 撮影＝ループ中にフレームを1枚ずつ取得（qキーで撮影終了）
@@ -70,6 +70,7 @@ while True:
                 round((c[0][3][1]-c[0][0][1])*0.4)+c[0][3][1]
             )
 
+            
             size = noimg.shape
             pts_dst = np.array([x1, x2, x3, x4])
             pts_src = np.array(
@@ -81,7 +82,7 @@ while True:
                 ], dtype=float
             )
 
-            im_src=card[int(ids[i])]
+            im_src = card[int(ids[i])]
 
             h, status = cv2.findHomography(pts_src, pts_dst)
             temp = cv2.warpPerspective(
