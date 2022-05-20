@@ -1,3 +1,4 @@
+#デッキリストを生成するくん
 from contextlib import nullcontext
 import cv2
 import numpy as np
