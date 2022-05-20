@@ -1,3 +1,4 @@
+#映像を出力するくん
 from contextlib import nullcontext
 from tkinter import messagebox
 import cv2
