@@ -1,19 +1,18 @@
 #映像を出力するくん
-from contextlib import nullcontext
 from tkinter import messagebox
 import cv2
 import numpy as np
 
-# カメラCh.(ここでは0)を指定
-while(1):
-        i1=input(u"カメラ番号を入力してください:")
-        if i1.isdecimal():
-            i1 = int(i1)
-            break
-        else:
-            print(u"整数を入力してください")
+# カメラCh.を指定
+try:
+    f = open('config.txt', 'r')
+    data = f.read()
+    f.close()
+except:
+    messagebox.showwarning("エラー","config.txtを読み込めませんでした")
+    exit()
 
-camera = cv2.VideoCapture(i1, cv2.CAP_DSHOW)
+camera = cv2.VideoCapture(int(data), cv2.CAP_DSHOW)
 
 # arucoライブラリ
 aruco = cv2.aruco
@@ -30,7 +29,7 @@ card = []
 try:
     f = open('cards/list.txt', 'r')
 except:
-    messagebox.showwarning("起動不可","list.txtが読み込めません")
+    messagebox.showwarning("list.txt不在","load.pyでlistを生成してください")
     exit()
 
 # 行ごとにスライス
