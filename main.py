@@ -108,6 +108,7 @@ while True:
             break
     except:
         messagebox.showwarning("?????","何かよくわからないエラー")
+        exit()
 
 # 撮影用オブジェクトとウィンドウの解放
 camera.release()

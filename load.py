@@ -29,9 +29,11 @@ for i, d in enumerate(dir):
     idx = d.find("\\")
     r = d[idx+len("\\"):]
 
+    """
     cv2.imshow("Press any key", img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    """
 
     while(1):
         n = input(r+u"を何枚採用しますか？：")
